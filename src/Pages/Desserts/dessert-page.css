@@ -1,0 +1,17 @@
+#root {
+    padding-bottom: 5%;
+}
+
+.dessert {
+    border-top: 1px solid grey;
+    padding-top: 1%;
+}
+
+.btn {
+    min-width: 8rem;
+    margin: 1em 2em;
+}
+
+.btn.delete {
+    background-color: rgb(206, 67, 67);
+}

@@ -16,6 +16,7 @@ import EditUserInfo from './Pages/UserManager/EditUserInfo';
 import Home from './Pages/Home/Home.js';
 import NotFoundPage from './Pages/NotFoundPage/NotFoundPage';
 import EventList from './Pages/Events/EventList';
+import DessertsPage from './Pages/Desserts/Desserts';
 import PrintingSolids from './Pages/3DPrinting/3DPrintForm.js';
 import SolidsConsole from './Pages/3DPrintingConsole/3DConsole.js';
 import MembershipApplication from
@@ -31,6 +32,7 @@ import AdminDashboard from './Pages/Profile/admin/AdminDashboard';
 import AboutPage from './Pages/About/About';
 import ProjectsPage from './Pages/Projects/Projects';
 import URLShortenerPage from './Pages/URLShortener/URLShortener';
+import DessertsAdmin from './Pages/Desserts/DessertsAdmin';
 
 import EmailPreferencesPage from './Pages/EmailPreferences/EmailPreferences';
 
@@ -155,6 +157,13 @@ export default function Routing({ appProps }) {
       inAdminNavbar: true,
       redirect: '/',
     },
+    {
+      Component: DessertsAdmin,
+      path: '/desserts-admin',
+      allowedIf: userIsOfficerOrAdmin,
+      redirect: '/',
+      inAdminNavbar: true,
+    },
   ];
   const signedOutRoutes = [
     { Component: Home, path: '/' },
@@ -165,6 +174,7 @@ export default function Routing({ appProps }) {
     { Component: AboutPage, path: '/about'},
     { Component: ProjectsPage, path: '/projects'},
     { Component: EmailPreferencesPage, path: '/emailPreferences' },
+    { Component: DessertsPage, path: '/desserts'}
   ];
   return (
     <Router>

@@ -57,7 +57,7 @@ router.post('/editDessert', (req, res) => {
     .then((Dessert) => {
       Dessert.title = title || Dessert.title;
       Dessert.description = description || Dessert.description;
-      Dessert.rating = rating || Dessert.rating;
+      Dessert.rating = rating != "" && !Number.isNaN(Number(rating)) ? Number(rating) : undefined;
       Dessert.save()
         .then(() => {
           res.sendStatus(OK);
