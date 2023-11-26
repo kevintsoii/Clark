@@ -2,12 +2,25 @@ const express = require("express");
 const router = express.Router();
 const Dessert = require("../models/Dessert");
 const {
+  checkIfTokenSent,
+  checkIfTokenValid,
+} = require('../../main_endpoints/util/token-functions');
+const {
   OK,
   BAD_REQUEST,
+  UNAUTHORIZED,
+  FORBIDDEN,
   NOT_FOUND
 } = require("../../util/constants").STATUS_CODES;
+const membershipState = require('../../util/constants').MEMBERSHIP_STATE;
 
 router.post('/createDessert', (req, res) => {
+  if (!checkIfTokenSent(req)) {
+    return res.sendStatus(FORBIDDEN);
+  } else if (!checkIfTokenValid(req, membershipState.OFFICER)) {
+    return res.sendStatus(UNAUTHORIZED);
+  }
+
   const { rating } = req.body;
   const numberSent = !Number.isNaN(Number(rating));
 
@@ -33,6 +46,12 @@ router.get('/getDesserts', (req, res) => {
 });
 
 router.post('/editDessert', (req, res) => {
+  if (!checkIfTokenSent(req)) {
+    return res.sendStatus(FORBIDDEN);
+  } else if (!checkIfTokenValid(req, membershipState.OFFICER)) {
+    return res.sendStatus(UNAUTHORIZED);
+  }
+
   const { title, description, rating, _id } = req.body;
   Dessert.findOne({ _id })
     .then((Dessert) => {
@@ -53,6 +72,12 @@ router.post('/editDessert', (req, res) => {
 });
 
 router.post('/deleteDessert', (req, res) => {
+  if (!checkIfTokenSent(req)) {
+    return res.sendStatus(FORBIDDEN);
+  } else if (!checkIfTokenValid(req, membershipState.OFFICER)) {
+    return res.sendStatus(UNAUTHORIZED);
+  }
+
   Dessert.deleteOne({ _id: req.body._id })
     .then((result) => {
       if (result.n < 1) {
