@@ -12,21 +12,21 @@ import EditUserInfo from './Pages/UserManager/EditUserInfo';
 
 import Home from './Pages/Home/Home.js';
 import NotFoundPage from './Pages/NotFoundPage/NotFoundPage';
-import MembershipApplication from
-  './Pages/MembershipApplication/MembershipApplication.js';
+import MembershipApplication from './Pages/MembershipApplication/MembershipApplication.js';
 import VerifyEmailPage from './Pages/MembershipApplication/VerifyEmail.js';
 import Printing from './Pages/2DPrinting/2DPrinting.js';
+import DessertsPage from './Pages/Desserts/Desserts';
 
 import { membershipState } from './Enums';
 
 import AboutPage from './Pages/About/About';
 import ProjectsPage from './Pages/Projects/Projects';
 import URLShortenerPage from './Pages/URLShortener/URLShortener';
+import DessertsAdmin from './Pages/Desserts/DessertsAdmin';
 
 import EmailPreferencesPage from './Pages/EmailPreferences/EmailPreferences';
 
 import sendUnsubscribeEmail from './Pages/Profile/admin/SendUnsubscribeEmail';
-
 
 export default function Routing({ appProps }) {
   const userIsAuthenticated = appProps.authenticated;
@@ -45,7 +45,7 @@ export default function Routing({ appProps }) {
       path: '/user-manager',
       allowedIf: userIsOfficerOrAdmin,
       redirect: '/',
-      inAdminNavbar: true
+      inAdminNavbar: true,
     },
     //
     // {
@@ -60,20 +60,20 @@ export default function Routing({ appProps }) {
       path: '/led-sign',
       allowedIf: userIsOfficerOrAdmin,
       redirect: '/',
-      inAdminNavbar: true
+      inAdminNavbar: true,
     },
     {
       Component: SpeakerPage,
       path: '/speakers',
       allowedIf: userIsOfficerOrAdmin,
       redirect: '/',
-      inAdminNavbar: true
+      inAdminNavbar: true,
     },
     {
       Component: Printing,
       path: '/2DPrinting',
       allowedIf: userIsMember || userIsOfficerOrAdmin,
-      redirect: '/login'
+      redirect: '/login',
     },
     {
       Component: Login,
@@ -88,20 +88,20 @@ export default function Routing({ appProps }) {
       Component: MembershipApplication,
       path: '/register',
       allowedIf: !userIsAuthenticated,
-      redirect: '/'
+      redirect: '/',
     },
     {
       Component: Profile,
       path: '/profile',
       allowedIf: userIsAuthenticated,
-      redirect: '/login'
+      redirect: '/login',
     },
     {
       Component: EditUserInfo,
       path: '/user/edit/:id',
       allowedIf: userIsOfficerOrAdmin,
       redirect: '/',
-      inAdminNavbar: true
+      inAdminNavbar: true,
     },
     {
       Component: URLShortenerPage,
@@ -117,35 +117,48 @@ export default function Routing({ appProps }) {
       inAdminNavbar: true,
       redirect: '/',
     },
+    {
+      Component: DessertsAdmin,
+      path: '/desserts-admin',
+      allowedIf: userIsOfficerOrAdmin,
+      redirect: '/',
+      inAdminNavbar: true,
+    },
   ];
   const signedOutRoutes = [
     { Component: Home, path: '/' },
     { Component: VerifyEmailPage, path: '/verify' },
-    { Component: AboutPage, path: '/about'},
-    { Component: ProjectsPage, path: '/projects'},
+    { Component: AboutPage, path: '/about' },
+    { Component: ProjectsPage, path: '/projects' },
     { Component: EmailPreferencesPage, path: '/emailPreferences' },
+    { Component: DessertsPage, path: '/desserts' },
   ];
   return (
     <Router>
       <Switch>
         {signedInRoutes.map(
-          ({
-            path,
-            Component,
-            allowedIf,
-            redirect,
-            inAdminNavbar,
-            hideAdminNavbar = false,
-          }, index) => {
+          (
+            {
+              path,
+              Component,
+              allowedIf,
+              redirect,
+              inAdminNavbar,
+              hideAdminNavbar = false,
+            },
+            index
+          ) => {
             function getCorrectComponent(privateRouteProps) {
               if (hideAdminNavbar) {
                 return <Component {...privateRouteProps} />;
               }
-              return (<NavBarWrapper
-                component={Component}
-                enableAdminNavbar={inAdminNavbar}
-                {...privateRouteProps}
-              />);
+              return (
+                <NavBarWrapper
+                  component={Component}
+                  enableAdminNavbar={inAdminNavbar}
+                  {...privateRouteProps}
+                />
+              );
             }
             return (
               <PrivateRoute
@@ -156,10 +169,10 @@ export default function Routing({ appProps }) {
                   allowed: allowedIf,
                   user: appProps.user,
                   redirect,
-                  authenticated:userIsAuthenticated,
-                  ...appProps
+                  authenticated: userIsAuthenticated,
+                  ...appProps,
                 }}
-                component={props => getCorrectComponent(props)}
+                component={(props) => getCorrectComponent(props)}
               />
             );
           }
@@ -170,7 +183,7 @@ export default function Routing({ appProps }) {
               key={index}
               exact
               path={path}
-              render={props => (
+              render={(props) => (
                 <NavBarWrapper component={Component} {...props} {...appProps} />
               )}
             />
