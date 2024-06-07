@@ -96,8 +96,13 @@ router.post('/checkIfUserExists', (req, res) => {
 router.post('/delete', (req, res) => {
   if (!checkIfTokenSent(req)) {
     return res.sendStatus(FORBIDDEN);
-  } else if (!checkIfTokenValid(req, membershipState.OFFICER)) {
-    return res.sendStatus(UNAUTHORIZED);
+  }
+
+  if (!checkIfTokenValid(req, membershipState.OFFICER)) {
+    let decoded = decodeToken(req);
+    if (!req.body.email || req.body.email != decoded.email) {
+      return res.sendStatus(UNAUTHORIZED);
+    }
   }
 
   User.deleteOne({ email: req.body.email }, function(error, user) {
